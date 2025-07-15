@@ -324,24 +324,41 @@ jobs:
       fail-fast: false
       matrix:
         config: ${{ fromJson(needs.load-benchmarks.outputs.matrix) }}
-    uses: ./.github/workflows/reusable_e2e_check.yml
-    with:
-      jobset_name: >-
-        ${{
-          matrix.config.benchmark == 'llama-3-8b' && needs.tp-run.outputs.llama-3-8b-name ||
-          matrix.config.benchmark == 'llama-3-8b-pure-mlp' && needs.tp-run.outputs.llama-3-8b-pure-mlp-name ||
-          matrix.config.benchmark == 'llama-3_1-8b-sa' && needs.tp-run.outputs.llama-3_1-8b-sa-name ||
-          matrix.config.benchmark == 'llama-3_1-8b-scan-offload' && needs.tp-run.outputs.llama-3_1-8b-scan-offload-name ||
-          matrix.config.benchmark == 'llama-3-8b-2d' && needs.tp-run.outputs.llama-3-8b-2d-name ||
-          matrix.config.benchmark == 'mixtral-8x7b' && needs.tp-run.outputs.mixtral-8x7b-name ||
-          matrix.config.benchmark == 'llama-3-8b-sft' && needs.tp-run.outputs.llama-3-8b-sft-name ||
-          matrix.config.benchmark == 'llama-3-8b-2-slice' && needs.tp-run.outputs.llama-3-8b-2-slice-name ||
-          matrix.config.benchmark == 'llama-3-8b-ddp-fsdp' && needs.tp-run.outputs.llama-3-8b-ddp-fsdp-name ||
-          matrix.config.benchmark == 'llama-3-8b-fsdp-cp' && needs.tp-run.outputs.llama-3-8b-fsdp-cp-name
-        }}
-      artifact_dir: ${{ needs.tp-run.outputs.artifact-dir }}
-      step_time_lower_bound: ${{ matrix.config.lower_bound }}
-      step_time_upper_bound: ${{ matrix.config.upper_bound }}
-      target_loss: ${{ matrix.config.target_loss }}
-      loss_tolerance: ${{ matrix.config.loss_tolerance }}
-    secrets: inherit
+    #uses: ./.github/workflows/reusable_e2e_check.yml
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Debug jobset_name
+        run: |
+          echo "Debugging jobset_name for ${{ matrix.config.benchmark }}:"
+          echo "jobset_name raw value: ${{
+            matrix.config.benchmark == 'llama-3-8b' && needs.tp-run.outputs.llama-3-8b-name ||
+            matrix.config.benchmark == 'llama-3-8b-pure-mlp' && needs.tp-run.outputs.llama-3-8b-pure-mlp-name ||
+            matrix.config.benchmark == 'llama-3_1-8b-sa' && needs.tp-run.outputs.llama-3_1-8b-sa-name ||
+            matrix.config.benchmark == 'llama-3_1-8b-scan-offload' && needs.tp-run.outputs.llama-3_1-8b-scan-offload-name ||
+            matrix.config.benchmark == 'llama-3-8b-2d' && needs.tp-run.outputs.llama-3-8b-2d-name ||
+            matrix.config.benchmark == 'mixtral-8x7b' && needs.tp-run.outputs.mixtral-8x7b-name ||
+            matrix.config.benchmark == 'llama-3-8b-sft' && needs.tp-run.outputs.llama-3-8b-sft-name ||
+            matrix.config.benchmark == 'llama-3-8b-2-slice' && needs.tp-run.outputs.llama-3-8b-2-slice-name ||
+            matrix.config.benchmark == 'llama-3-8b-ddp-fsdp' && needs.tp-run.outputs.llama-3-8b-ddp-fsdp-name ||
+            matrix.config.benchmark == 'llama-3-8b-fsdp-cp' && needs.tp-run.outputs.llama-3-8b-fsdp-cp-name
+          }}"
+    #with:
+    #  jobset_name: >-
+    #    ${{
+    #      matrix.config.benchmark == 'llama-3-8b' && needs.tp-run.outputs.llama-3-8b-name ||
+    #      matrix.config.benchmark == 'llama-3-8b-pure-mlp' && needs.tp-run.outputs.llama-3-8b-pure-mlp-name ||
+    #      matrix.config.benchmark == 'llama-3_1-8b-sa' && needs.tp-run.outputs.llama-3_1-8b-sa-name ||
+    #      matrix.config.benchmark == 'llama-3_1-8b-scan-offload' && needs.tp-run.outputs.llama-3_1-8b-scan-offload-name ||
+    #      matrix.config.benchmark == 'llama-3-8b-2d' && needs.tp-run.outputs.llama-3-8b-2d-name ||
+    #      matrix.config.benchmark == 'mixtral-8x7b' && needs.tp-run.outputs.mixtral-8x7b-name ||
+    #      matrix.config.benchmark == 'llama-3-8b-sft' && needs.tp-run.outputs.llama-3-8b-sft-name ||
+    #      matrix.config.benchmark == 'llama-3-8b-2-slice' && needs.tp-run.outputs.llama-3-8b-2-slice-name ||
+    #      matrix.config.benchmark == 'llama-3-8b-ddp-fsdp' && needs.tp-run.outputs.llama-3-8b-ddp-fsdp-name ||
+    #      matrix.config.benchmark == 'llama-3-8b-fsdp-cp' && needs.tp-run.outputs.llama-3-8b-fsdp-cp-name
+    #    }}
+    #  artifact_dir: ${{ needs.tp-run.outputs.artifact-dir }}
+    #  step_time_lower_bound: ${{ matrix.config.lower_bound }}
+    #  step_time_upper_bound: ${{ matrix.config.upper_bound }}
+    #  target_loss: ${{ matrix.config.target_loss }}
+    #  loss_tolerance: ${{ matrix.config.loss_tolerance }}
+    #secrets: inherit
