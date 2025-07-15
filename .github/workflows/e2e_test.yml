@@ -76,6 +76,9 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=llama-3-8b \
             dataset=wikitext \
@@ -97,6 +100,9 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=llama-3-8b \
             dataset=wikitext \
@@ -119,6 +125,9 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=llama-3.1-8b \
             model.attention_kernel=splash_attention \
@@ -141,6 +150,9 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=llama-3.1-8b \
             model/remat=llama-scan-offload \
@@ -163,6 +175,9 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=llama-3-8b \
             model/sharding=llama-fsdp-tp \
@@ -186,6 +201,9 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=llama-3-8b \
             model/sharding=llama-fsdp-tp-cp \
@@ -209,6 +227,9 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=mixtral-8x7b \
             model.num_hidden_layers=16 \
@@ -232,6 +253,9 @@ jobs:
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
             --num-slices 2 \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=llama-3-8b \
             model/sharding=llama-fsdp \
@@ -255,6 +279,9 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             --config-name llama-3-8b-sft-w-gsm8k \
             ici_mesh.fsdp=4 \
@@ -274,6 +301,9 @@ jobs:
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
             --num-slices 2 \
+            --bq-project ${{ vars.GCP_PROJECT }} \
+            --bq-dataset ${{ vars.BQ_DATASET }} \
+            --bq-table ${{ vars.BQ_TABLE }} \
             torchprime/torch_xla_models/train.py \
             model=llama-3-8b \
             model/sharding=llama-fsdp \
