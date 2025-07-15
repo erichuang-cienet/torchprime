@@ -19,7 +19,7 @@ jobs:
     name: Submit workloads
     runs-on: ubuntu-24.04
     env:
-      ARTIFACT_DIR: gs://torchprime-e2e-tests/${{ github.job }}/${{ github.run_id }}-${{ github.run_attempt }}
+      ARTIFACT_DIR: gs://eric-torchprime-e2e-tests/${{ github.job }}/${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       llama-3-8b-name: ${{ steps.run-llama-3-8b.outputs.name }}
       llama-3-8b-pure-mlp-name: ${{ steps.run-llama-3-8b-pure-mlp.outputs.name }}
