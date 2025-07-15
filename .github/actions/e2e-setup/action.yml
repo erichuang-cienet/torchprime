@@ -20,6 +20,12 @@ inputs:
     description: GCP service account key
     required: true
     type: string
+  bq_dataset:
+    required: true
+    type: string
+  bq_table:
+    required: true
+    type: string
 runs:
   using: "composite"
   steps:
@@ -84,6 +90,8 @@ runs:
         --num-slices 1
         --artifact-dir '${{ inputs.artifact_dir }}'
         --tpu-type '${{ inputs.tpu_type }}'
-        --bq-table 'torchprime-e2e-tests'
+        --bq-project '${{ inputs.gcp_project }}'
+        --bq-dataset '${{ inputs.bq_dataset }}'
+        --bq-table '${{ inputs.bq_table }}'
         --upload-metrics
       shell: bash
