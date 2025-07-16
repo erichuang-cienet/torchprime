@@ -19,7 +19,7 @@ jobs:
     name: Submit workloads
     runs-on: ubuntu-24.04
     env:
-      ARTIFACT_DIR: gs://eric-torchprime-e2e-tests/${{ github.job }}/${{ github.run_id }}-${{ github.run_attempt }}
+      ARTIFACT_DIR: gs://${{ vars.GS_BUCKET }}/${{ github.job }}/${{ github.run_id }}-${{ github.run_attempt }}
     outputs:
       llama-3-8b-name: ${{ steps.run-llama-3-8b.outputs.name }}
       llama-3-8b-pure-mlp-name: ${{ steps.run-llama-3-8b-pure-mlp.outputs.name }}
@@ -189,15 +189,14 @@ jobs:
           tp run ${{ steps.docker-url-option.outputs.value }} \
             --name $name \
             torchprime/torch_xla_models/train.py \
-            model=llama-3-8b \
+            model=llama-3-8b-cp \
             model/sharding=llama-fsdp-tp-cp \
             dataset=wikitext \
             task=train \
-            task.global_batch_size=2 \
+            task.global_batch_size=4 \
             task.max_steps=15 \
             task.lr_scheduler.type=constant \
-            ici_mesh.fsdp=2 \
-            ici_mesh.context=2 \
+            ici_mesh.fsdp=4 \
             profile_start_step=3
 
       - name: Run Mixtral 8x7B
@@ -326,23 +325,26 @@ jobs:
         config: ${{ fromJson(needs.load-benchmarks.outputs.matrix) }}
     uses: ./.github/workflows/reusable_e2e_check.yml
     with:
-      jobset_name: ${{ matrix.config.benchmark }}
-      #jobset_name: >-
-      #  ${{
-      #    matrix.config.benchmark == 'llama-3-8b' && needs.tp-run.outputs.llama-3-8b-name ||
-      #    matrix.config.benchmark == 'llama-3-8b-pure-mlp' && needs.tp-run.outputs.llama-3-8b-pure-mlp-name ||
-      #    matrix.config.benchmark == 'llama-3_1-8b-sa' && needs.tp-run.outputs.llama-3_1-8b-sa-name ||
-      #    matrix.config.benchmark == 'llama-3_1-8b-scan-offload' && needs.tp-run.outputs.llama-3_1-8b-scan-offload-name ||
-      #    matrix.config.benchmark == 'llama-3-8b-2d' && needs.tp-run.outputs.llama-3-8b-2d-name ||
-      #    matrix.config.benchmark == 'mixtral-8x7b' && needs.tp-run.outputs.mixtral-8x7b-name ||
-      #    matrix.config.benchmark == 'llama-3-8b-sft' && needs.tp-run.outputs.llama-3-8b-sft-name ||
-      #    matrix.config.benchmark == 'llama-3-8b-2-slice' && needs.tp-run.outputs.llama-3-8b-2-slice-name ||
-      #    matrix.config.benchmark == 'llama-3-8b-ddp-fsdp' && needs.tp-run.outputs.llama-3-8b-ddp-fsdp-name ||
-      #    matrix.config.benchmark == 'llama-3-8b-fsdp-cp' && needs.tp-run.outputs.llama-3-8b-fsdp-cp-name
-      #  }}
+      jobset_name: >-
+        ${{
+          matrix.config.benchmark == 'llama-3-8b' && needs.tp-run.outputs.llama-3-8b-name ||
+          matrix.config.benchmark == 'llama-3-8b-pure-mlp' && needs.tp-run.outputs.llama-3-8b-pure-mlp-name ||
+          matrix.config.benchmark == 'llama-3_1-8b-sa' && needs.tp-run.outputs.llama-3_1-8b-sa-name ||
+          matrix.config.benchmark == 'llama-3_1-8b-scan-offload' && needs.tp-run.outputs.llama-3_1-8b-scan-offload-name ||
+          matrix.config.benchmark == 'llama-3-8b-2d' && needs.tp-run.outputs.llama-3-8b-2d-name ||
+          matrix.config.benchmark == 'mixtral-8x7b' && needs.tp-run.outputs.mixtral-8x7b-name ||
+          matrix.config.benchmark == 'llama-3-8b-sft' && needs.tp-run.outputs.llama-3-8b-sft-name ||
+          matrix.config.benchmark == 'llama-3-8b-2-slice' && needs.tp-run.outputs.llama-3-8b-2-slice-name ||
+          matrix.config.benchmark == 'llama-3-8b-ddp-fsdp' && needs.tp-run.outputs.llama-3-8b-ddp-fsdp-name ||
+          matrix.config.benchmark == 'llama-3-8b-fsdp-cp' && needs.tp-run.outputs.llama-3-8b-fsdp-cp-name
+        }}
       artifact_dir: ${{ needs.tp-run.outputs.artifact-dir }}
       step_time_lower_bound: ${{ matrix.config.lower_bound }}
       step_time_upper_bound: ${{ matrix.config.upper_bound }}
-      #target_loss: ${{ matrix.config.target_loss }}
-      #loss_tolerance: ${{ matrix.config.loss_tolerance }}
+      # Optional loss validation settings. When undefined in the matrix,
+      # these fields expand to an empty string which causes a workflow
+      # syntax error. Default to ``0`` so the reusable workflow can
+      # skip the loss check when no value is provided.
+      target_loss: ${{ matrix.config.target_loss || 0 }}
+      loss_tolerance: ${{ matrix.config.loss_tolerance || 0 }}
     secrets: inherit
