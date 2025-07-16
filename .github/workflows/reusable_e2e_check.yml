@@ -38,6 +38,11 @@ jobs:
   results:
     runs-on: ubuntu-24.04
     steps:
+      - name: Debug Reusable Workflow
+        run: |
+          echo "Received jobset_name from caller: ${{ inputs.jobset_name }}"
+          echo "Received artifact_dir from caller: ${{ inputs.artifact_dir }}"
+          echo "Received target_loss from caller: ${{ format('{0}', inputs.target_loss) }}"
       - uses: actions/checkout@v4
       - uses: ./.github/actions/e2e-setup
         with:
@@ -49,12 +54,14 @@ jobs:
           gcp_sa_key: ${{ secrets.GCP_SA_KEY }}
       - name: Get GKE credentials
         run: |
+          echo "Run Get GKE credentials"
           gcloud container clusters get-credentials ${{ vars.XPK_CLUSTER_NAME }} --region=${{ vars.GCP_ZONE }} --project=${{ vars.GCP_PROJECT }}
           kubectl config view
           kubectl config set-context --current --namespace=default
       - name: Get pod name
         id: get_pod_name
         run: |
+          echo "Run Get pod name"
           # Wait for pod to exist
           for i in {1..60}; do
             pod_name=$(kubectl get pods -l jobset.sigs.k8s.io/jobset-name=${{ inputs.jobset_name }} -o jsonpath='{.items[0].metadata.name}' 2>/dev/null || echo "")
