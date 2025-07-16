@@ -343,6 +343,6 @@ jobs:
       artifact_dir: ${{ needs.tp-run.outputs.artifact-dir }}
       step_time_lower_bound: ${{ matrix.config.lower_bound }}
       step_time_upper_bound: ${{ matrix.config.upper_bound }}
-      target_loss: ${{ matrix.config.target_loss }}
-      loss_tolerance: ${{ matrix.config.loss_tolerance }}
+      #target_loss: ${{ matrix.config.target_loss }}
+      #loss_tolerance: ${{ matrix.config.loss_tolerance }}
     secrets: inherit

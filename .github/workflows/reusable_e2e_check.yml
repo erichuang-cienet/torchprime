@@ -44,14 +44,14 @@ jobs:
           echo "Received artifact_dir from caller: ${{ inputs.artifact_dir }}"
           echo "Received target_loss from caller: ${{ format('{0}', inputs.target_loss) }}"
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/e2e-setup
-        with:
-          gcp_project: ${{ vars.GCP_PROJECT }}
-          gcp_zone: ${{ vars.GCP_ZONE }}
-          xpk_cluster_name: ${{ vars.XPK_CLUSTER_NAME }}
-          tpu_type: ${{ vars.TPU_TYPE }}
-          artifact_dir: ${{ inputs.artifact_dir }}
-          gcp_sa_key: ${{ secrets.GCP_SA_KEY }}
+      #- uses: ./.github/actions/e2e-setup
+      #  with:
+      #    gcp_project: ${{ vars.GCP_PROJECT }}
+      #    gcp_zone: ${{ vars.GCP_ZONE }}
+      #    xpk_cluster_name: ${{ vars.XPK_CLUSTER_NAME }}
+      #    tpu_type: ${{ vars.TPU_TYPE }}
+      #    artifact_dir: ${{ inputs.artifact_dir }}
+      #    gcp_sa_key: ${{ secrets.GCP_SA_KEY }}
       #- name: Get GKE credentials
       #  run: |
       #    gcloud container clusters get-credentials ${{ vars.XPK_CLUSTER_NAME }} --region=${{ vars.GCP_ZONE }} --project=${{ vars.GCP_PROJECT }}
